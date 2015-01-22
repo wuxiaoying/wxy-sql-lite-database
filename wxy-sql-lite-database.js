@@ -4,8 +4,8 @@
       this.db = window.openDatabase(this.name, this.version, this.displayName, this.size);
     },
     Transaction: function(commands, _arg) {
-      var failureCallback, successCallback;
-      successCallback = _arg.successCallback, failureCallback = _arg.failureCallback;
+      var failureCallback, successCallback, _ref;
+      _ref = _arg != null ? _arg : {}, successCallback = _ref.successCallback, failureCallback = _ref.failureCallback;
       return this.db.transaction((function(_this) {
         return function(transaction) {
           _this.ExecuteCommands(commands, {
@@ -13,18 +13,22 @@
             index: 0,
             previousResultSet: null,
             successCallback: function(resultSet) {
-              successCallback(resultSet);
+              if (typeof successCallback === "function") {
+                successCallback(resultSet);
+              }
             },
             failureCallback: function(error) {
-              failureCallback(error);
+              if (typeof failureCallback === "function") {
+                failureCallback(error);
+              }
             }
           });
         };
       })(this));
     },
     ExecuteCommands: function(commands, _arg) {
-      var command, failureCallback, index, previousResultSet, successCallback, transaction;
-      transaction = _arg.transaction, index = _arg.index, previousResultSet = _arg.previousResultSet, successCallback = _arg.successCallback, failureCallback = _arg.failureCallback;
+      var command, failureCallback, index, previousResultSet, successCallback, transaction, _ref;
+      _ref = _arg != null ? _arg : {}, transaction = _ref.transaction, index = _ref.index, previousResultSet = _ref.previousResultSet, successCallback = _ref.successCallback, failureCallback = _ref.failureCallback;
       if (index === commands.length) {
         successCallback(previousResultSet);
         return;
@@ -49,7 +53,9 @@
         };
       })(this), function(transaction, error) {
         console.log(error);
-        failureCallback(error);
+        if (typeof failureCallback === "function") {
+          failureCallback(error);
+        }
       });
     }
   });

@@ -3,30 +3,21 @@ Polymer
     @db = window.openDatabase @name, @version, @displayName, @size
     return
 
-  Transaction: (commands,
-    successCallback: successCallback
-    failureCallback: failureCallback
-  ) ->
+  Transaction: (commands, {successCallback, failureCallback} = {}) ->
     @db.transaction (transaction) =>
       @ExecuteCommands commands,
         transaction: transaction
         index: 0
         previousResultSet: null
         successCallback: (resultSet) ->
-          successCallback resultSet
+          successCallback? resultSet
           return
         failureCallback: (error) ->
-          failureCallback error
+          failureCallback? error
           return
       return
 
-  ExecuteCommands: (commands,
-    transaction: transaction
-    index: index
-    previousResultSet: previousResultSet
-    successCallback: successCallback
-    failureCallback: failureCallback
-  ) ->
+  ExecuteCommands: (commands, {transaction, index, previousResultSet, successCallback, failureCallback} = {}) ->
     if index is commands.length
       successCallback previousResultSet
       return
@@ -48,7 +39,7 @@ Polymer
       return
     , (transaction, error) ->
       console.log error
-      failureCallback error
+      failureCallback? error
       return
 
     return

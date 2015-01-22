@@ -6,4 +6,4 @@ Polymer
       result: (resultSet) ->
         if resultSet.rows.length is 1
           console.log resultSet.rows.item 0
-          angular.copy resultSet.rows.item 0
+          resultSet.rows.item 0
